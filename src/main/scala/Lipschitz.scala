@@ -1,10 +1,15 @@
-class Lipschitz(private val p: (Double, Double),
+
+class Lipschitz(private val p : NormedVector,
                      private val zp: Double,
                      private val L: Double = -1.0)
 
-  extends ((Double, Double) => Double) {
+  extends (NormedVector => Double) {
 
-  override def apply(v1: Double, v2: Double): Double
-    = zp + L * math.sqrt((v1 - p._1) * (v1 - p._1) + (v2 - p._2) * (v2 - p._2))
+  override def apply(v: NormedVector): Double = zp + L * (p-v).norm
 
+  def apply (doubles: Double*): Double = {
+    val arr = new Array[Double](doubles.length)
+    for (i<- arr.indices) arr(i) = doubles(i)
+    apply(new NormedVector(arr))
+  }
 }
